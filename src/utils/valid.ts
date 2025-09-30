@@ -4,9 +4,9 @@ export function validateEmail(email: string) {
     return re.test(String(email).toLowerCase())
 }
 
-// password valid fnc - 6 min char - max 12 - uppercase - lowercase - number
+// password valid fnc - 8 min char - max 12 - uppercase - lowercase - number
 export function validatePassword(password: string) {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,12}$/
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,12}$/
     return re.test(String(password))
 }
 

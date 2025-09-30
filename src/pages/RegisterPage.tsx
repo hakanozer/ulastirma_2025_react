@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { validateEmail, validateName, validatePassword } from '../utils/valid'
+import { toast } from 'react-toastify';
+import { userRegister } from '../services/userService';
 
 function RegisterPage() {
 
@@ -11,13 +13,24 @@ function RegisterPage() {
     const sendRegister = (evt: React.FormEvent ) => {
         evt.preventDefault()
         if (!validateName(name)) {
-            alert('Name is not valid - only letters and space - min 3 max 30 char - no number') 
+            toast.error('Name is not valid - only letters and space - min 3 max 30 char - no number')
         } else if (!validateEmail(email)) {
-            alert('Email is not valid - must be a valid email address')
+            toast.error('Email is not valid - must be a valid email address')
         } else if (!validatePassword(password)) {
-            alert('Password is not valid - 6 to 12 chars - at least one uppercase, one lowercase and one number')
+            toast.error('Password is not valid - 8 to 12 chars - at least one uppercase, one lowercase and one number')
         } else {
-            console.log("Form Send", name, email, password)
+           userRegister(name, email, password).then(res => {
+            // işlem başarılı olduysa - 200 ve ailesi döndüyse
+            const dt = res.data
+            console.log(dt)
+           }).catch(err => {
+            // işlem 200 ve ailesi dışında ise
+            if (err.status === 422) {
+                toast.error('The email has already been taken.')
+            }else {
+                toast.error('Please try again later.')
+            }
+           })
         }
     }
 
