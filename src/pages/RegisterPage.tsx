@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { validateEmail, validateName, validatePassword } from '../utils/valid'
 import { toast } from 'react-toastify';
 import { userRegister } from '../services/userService';
 
 function RegisterPage() {
+
+    // useNavigate - redirect
+    const navigate = useNavigate()
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -22,7 +25,10 @@ function RegisterPage() {
            userRegister(name, email, password).then(res => {
             // işlem başarılı olduysa - 200 ve ailesi döndüyse
             const dt = res.data
-            console.log(dt)
+            // login redirect
+            // window.location.href = '/' // önermilmez - react router dom navigate kullanılmalı
+            toast.success('Registration successful - You can login now.')
+            navigate('/')
            }).catch(err => {
             // işlem 200 ve ailesi dışında ise
             if (err.status === 422) {

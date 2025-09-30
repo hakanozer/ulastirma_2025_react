@@ -7,6 +7,8 @@ import { ToastContainer } from 'react-toastify';
 // import pages
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
+import Control from './pages/Control';
 
 
 const route = 
@@ -14,6 +16,7 @@ const route =
   <Routes>
     <Route path='/' element={<LoginPage/>} />
     <Route path='/register' element={<RegisterPage/>} />
+    <Route path='/dashboard' element={<Control item={<DashboardPage/>} /> } />
   </Routes>
   <ToastContainer/>
 </BrowserRouter>
