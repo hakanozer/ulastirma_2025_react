@@ -1,4 +1,4 @@
-import { IUser } from "../models/IUser"
+import { IProfile, IUser } from "../models/IUser"
 import { apiConfig } from "./apiConfig"
 
 export const userRegister = (name: string, email: string, password: string) => {
@@ -16,4 +16,16 @@ export const userLogin = (email:string, password: string) => {
         password
     }
     return apiConfig.post<IUser>('auth/login', sendObj)
+}
+
+export const userProfile = () => {
+    const token = localStorage.getItem('token')
+    const headers = {
+        headers: { Authorization: `Bearer ${token}` }
+    }
+    return apiConfig.get<IProfile>('profile/me', headers)
+}
+
+export const userLogout = () => {
+    return apiConfig.post('auth/logout')
 }

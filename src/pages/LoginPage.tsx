@@ -19,6 +19,7 @@ function LoginPages() {
     }else if (password.length < 5 || password.length > 12) {
         toast.error('Invalid Password')
     } else {
+      // login işlemi
       userLogin(email, password).then(res => {
         const dt = res.data
         localStorage.setItem('token', dt.data.access_token)
@@ -29,6 +30,7 @@ function LoginPages() {
       })
     }
   }
+
   return (
     <>
       <div className='row'>

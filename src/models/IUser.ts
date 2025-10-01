@@ -3,6 +3,11 @@ export interface IUser {
   data: Data
 }
 
+export interface IProfile {
+  meta: Meta
+  data: User
+}
+
 export interface Meta {
   status: number
   message: string
