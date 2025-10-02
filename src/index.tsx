@@ -9,6 +9,10 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import Control from './pages/Control';
+import ProductDetail from './pages/ProductDetail';
+import Likes from './pages/Likes';
+import Notfound from './pages/Notfound';
+
 
 
 const route = 
@@ -17,6 +21,9 @@ const route =
     <Route path='/' element={<LoginPage/>} />
     <Route path='/register' element={<RegisterPage/>} />
     <Route path='/dashboard' element={<Control item={<DashboardPage/>} /> } />
+    <Route path='/productDetail/:id' element={<Control item={<ProductDetail/>} /> } />
+    <Route path='/likes' element={<Control item={<Likes/>} /> } />
+    <Route path='*' element={ <Notfound/> } />
   </Routes>
   <ToastContainer/>
 </BrowserRouter>

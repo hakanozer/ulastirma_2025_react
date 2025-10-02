@@ -2,7 +2,10 @@ export interface IAllProducts {
     meta: Meta;
     data: IProduct[];
 }
-
+export interface IOneProduct {
+    meta: Meta,
+    data: IProduct
+}
 export interface IProduct {
     id:                   number;
     title:                string;
