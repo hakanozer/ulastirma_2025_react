@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IProfile } from '../models/IUser'
 import { userLogout } from '../services/userService'
 import { NavLink } from 'react-router-dom'
+import { allLikes } from '../utils/likesStore'
 
 function Navbar(props: {user?: IProfile}) {
+
+const [likesCount, setLikesCount] = useState(0)
+useEffect(() => {
+    console.log("nabbar call")
+    const count = allLikes().length
+    setLikesCount(count)
+}, [])  
 
 const logout = () => {
     userLogout().then(res => {
@@ -39,7 +47,7 @@ const logout = () => {
             </ul>
             </li>
             <li className="nav-item">
-            <a className="nav-link disabled" aria-disabled="true">Sn. {props.user?.data.name}</a>
+            <a className="nav-link disabled" aria-disabled="true">Sn. {props.user?.data.name} - ({likesCount})</a>
             </li>
         </ul>
         <form className="d-flex" role="search">

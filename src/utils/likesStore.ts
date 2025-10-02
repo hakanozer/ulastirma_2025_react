@@ -31,3 +31,12 @@ export const fncIsLike = (id: number) => {
     }
     return false
 }
+
+export const allLikes = () => {
+    const stLikes = localStorage.getItem('likes')
+    if (stLikes) {
+        const arr = JSON.parse(stLikes) as number[]
+        return arr
+    }
+    return []
+}
