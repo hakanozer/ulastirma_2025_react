@@ -4,19 +4,24 @@ import { getOneProduct } from '../services/productService'
 import { IOneProduct, IProduct } from '../models/IAllProducts'
 import axios from 'axios'
 import ProductItem from '../components/ProductItem'
+import { useSelector } from 'react-redux'
+import { StateType } from '../useRedux/store'
 
 function Likes() {
+
+  // redux data pull
+ const likesArr = useSelector((state: StateType) => state.likesReducer)
 
   const [proArr, setProArr] = useState<IProduct[]>([])
   useEffect(()=> {
     let arr:IProduct[] = []
-    axios.all(allLikes().map((id) => getOneProduct(id))).then(ressArr => {
+    axios.all(likesArr.map((id) => getOneProduct(id))).then(ressArr => {
       ressArr.map(res => {
         arr.push(res.data.data)
       })
       setProArr(arr)
     })
-  }, [])
+  }, [likesArr])
 
   return (
     <>

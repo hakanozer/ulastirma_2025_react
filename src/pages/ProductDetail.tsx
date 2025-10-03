@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getOneProduct } from '../services/productService'
 import { IProduct } from '../models/IAllProducts'
-import { addRemoveLike, fncIsLike } from '../utils/likesStore'
+import { addRemoveLike, allLikes, fncIsLike } from '../utils/likesStore'
+import { useDispatch } from 'react-redux'
+import { ELikes, ILikeAction } from '../useRedux/likesReducer'
 
 function ProductDetail() {
+
+  // redux data send
+  const dispatch = useDispatch()
 
   const params = useParams()
   const id = Number(params.id)
@@ -33,6 +38,13 @@ function ProductDetail() {
   const addRemove = () => {
     setIsLike(!isLike)
     addRemoveLike(id)
+
+    const arr = allLikes()
+    const likesObj: ILikeAction = {
+        type: ELikes.LIST,
+        payload: arr
+    }
+    dispatch(likesObj)
   }
 
   return (

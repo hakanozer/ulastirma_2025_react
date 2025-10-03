@@ -3,14 +3,25 @@ import { IProfile } from '../models/IUser'
 import { userLogout } from '../services/userService'
 import { NavLink } from 'react-router-dom'
 import { allLikes } from '../utils/likesStore'
+import { useDispatch, useSelector } from 'react-redux'
+import { ELikes, ILikeAction } from '../useRedux/likesReducer'
+import { StateType } from '../useRedux/store'
 
 function Navbar(props: {user?: IProfile}) {
 
-const [likesCount, setLikesCount] = useState(0)
+// redux data send
+const dispatch = useDispatch()
+
+// redux data pull
+const likesArr = useSelector((state: StateType) => state.likesReducer)
+
 useEffect(() => {
-    console.log("nabbar call")
-    const count = allLikes().length
-    setLikesCount(count)
+    const arr = allLikes()
+    const likesObj: ILikeAction = {
+        type: ELikes.LIST,
+        payload: arr
+    }
+    dispatch(likesObj)
 }, [])  
 
 const logout = () => {
@@ -47,7 +58,7 @@ const logout = () => {
             </ul>
             </li>
             <li className="nav-item">
-            <a className="nav-link disabled" aria-disabled="true">Sn. {props.user?.data.name} - ({likesCount})</a>
+            <a className="nav-link disabled" aria-disabled="true">Sn. {props.user?.data.name} - ({likesArr.length})</a>
             </li>
         </ul>
         <form className="d-flex" role="search">
