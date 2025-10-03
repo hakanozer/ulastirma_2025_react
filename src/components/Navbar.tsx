@@ -6,6 +6,7 @@ import { allLikes } from '../utils/likesStore'
 import { useDispatch, useSelector } from 'react-redux'
 import { ELikes, ILikeAction } from '../useRedux/likesReducer'
 import { StateType } from '../useRedux/store'
+import { decrypt, encrypt } from '../utils/encDec'
 
 function Navbar(props: {user?: IProfile}) {
 
@@ -16,6 +17,10 @@ const dispatch = useDispatch()
 const likesArr = useSelector((state: StateType) => state.likesReducer)
 
 useEffect(() => {
+    const pass = encrypt('12345')
+    console.log(pass)
+    const plainPass = decrypt(pass)
+    console.log(plainPass)
     const arr = allLikes()
     const likesObj: ILikeAction = {
         type: ELikes.LIST,
