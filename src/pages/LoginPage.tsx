@@ -4,6 +4,7 @@ import { validateEmail } from '../utils/valid'
 import { toast } from 'react-toastify'
 import { userLogin } from '../services/userService'
 import { apiConfig } from '../services/apiConfig'
+import Seo from '../components/Seo'
 
 function LoginPages() {
 
@@ -33,6 +34,7 @@ function LoginPages() {
 
   return (
     <>
+    <Seo title='Login' desc='Login Description'/>
       <div className='row'>
         <div className='col-sm-4'></div>
         <div className='col-sm-4'>

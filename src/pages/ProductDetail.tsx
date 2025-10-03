@@ -5,6 +5,7 @@ import { IProduct } from '../models/IAllProducts'
 import { addRemoveLike, allLikes, fncIsLike } from '../utils/likesStore'
 import { useDispatch } from 'react-redux'
 import { ELikes, ILikeAction } from '../useRedux/likesReducer'
+import Seo from '../components/Seo'
 
 function ProductDetail() {
 
@@ -51,6 +52,7 @@ function ProductDetail() {
     <>
     { item &&
         <>
+        <Seo title={item.title} desc={item.description} />
         <div className='row'>
             <div className='col-sm-6'>
                 <h2>{item.title}</h2>

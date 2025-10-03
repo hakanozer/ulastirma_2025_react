@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getAllProducts } from '../services/productService'
 import { IProduct } from '../models/IAllProducts'
 import ProductItem from '../components/ProductItem'
+import Seo from '../components/Seo'
 
 function DashboardPage() {
 
@@ -27,6 +28,7 @@ function DashboardPage() {
   
   return (
     <>
+      <Seo title='Products' desc='Products Description'/>
       <h2>Products</h2>
 
       <nav>

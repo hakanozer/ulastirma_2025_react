@@ -6,6 +6,7 @@ import axios from 'axios'
 import ProductItem from '../components/ProductItem'
 import { useSelector } from 'react-redux'
 import { StateType } from '../useRedux/store'
+import Seo from '../components/Seo'
 
 function Likes() {
 
@@ -25,6 +26,7 @@ function Likes() {
 
   return (
     <>
+      <Seo title='Likes' desc='Likes Description'/>
       <div className='row'>
         <h2>Likes</h2>
         {proArr.map((item, index) => 
