@@ -3,8 +3,11 @@ import { getAllProducts } from '../services/productService'
 import { IProduct } from '../models/IAllProducts'
 import ProductItem from '../components/ProductItem'
 import Seo from '../components/Seo'
+import { useTableUser } from '../components/userTable'
 
 function DashboardPage() {
+
+  const userTable = useTableUser('')
 
   const [proArr, setProArr] = useState<IProduct[]>([])
   const [pages, setPages] = useState<number[]>([])

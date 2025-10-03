@@ -14,6 +14,7 @@ import Likes from './pages/Likes';
 import Notfound from './pages/Notfound';
 import { Provider } from 'react-redux';
 import { store } from './useRedux/store';
+import Users from './pages/Users';
 
 
 
@@ -26,6 +27,7 @@ const route =
       <Route path='/dashboard' element={<Control item={<DashboardPage/>} /> } />
       <Route path='/productDetail/:id' element={<Control item={<ProductDetail/>} /> } />
       <Route path='/likes' element={<Control item={<Likes/>} /> } />
+      <Route path='/users' element={<Control item={<Users/>} /> } />
       <Route path='*' element={ <Notfound/> } />
     </Routes>
     <ToastContainer/>
