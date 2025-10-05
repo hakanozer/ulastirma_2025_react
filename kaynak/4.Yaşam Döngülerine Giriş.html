@@ -1,0 +1,181 @@
+<h1>React Yaşam Döngülerine (Lifecycle) Giriş 🔄</h1>
+
+<p>
+React’te her bileşenin bir <strong>yaşam döngüsü (component lifecycle)</strong> vardır. 
+Bir component oluşturulduğunda (<em>mount</em>), güncellendiğinde (<em>update</em>) veya kaldırıldığında (<em>unmount</em>) belirli işlemler gerçekleşir.  
+Modern React’te bu işlemler <strong>useEffect</strong> hook’u ile yönetilir.
+</p>
+
+<p>
+Bu konuyu anlamak, özellikle <strong>API çağrıları</strong>, <strong>abonelik işlemleri</strong> ve <strong>cleanup</strong> gibi durumları yönetirken çok önemlidir.
+</p>
+
+<hr />
+
+<h2>1. JSX Bloklarını Koşullu Render Edelim ⚙️</h2>
+
+<p>
+React'te, koşullu render işlemi (conditional rendering), bir bileşenin durumuna göre JSX bloklarının gösterilmesini veya gizlenmesini sağlar.  
+Yani, bir <strong>if</strong> veya <strong>ternary</strong> kontrolüyle kullanıcıya farklı arayüzler gösterebiliriz.
+</p>
+
+<p><strong>Örnek:</strong> Kullanıcının giriş yapıp yapmadığını kontrol eden basit bir component</p>
+
+<pre><code class="language-tsx">
+import React, { useState } from "react";
+
+const ConditionalRender: React.FC = () =&gt; {
+  const [isLoggedIn, setIsLoggedIn] = useState&lt;boolean&gt;(false);
+
+  return (
+    &lt;div style={{ textAlign: "center", marginTop: "20px" }}&gt;
+      {isLoggedIn ? (
+        &lt;h2&gt;Hoş geldin, kullanıcı! 🎉&lt;/h2&gt;
+      ) : (
+        &lt;h2&gt;Lütfen giriş yapın 👋&lt;/h2&gt;
+      )}
+
+      &lt;button onClick={() =&gt; setIsLoggedIn(!isLoggedIn)}&gt;
+        {isLoggedIn ? "Çıkış Yap" : "Giriş Yap"}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default ConditionalRender;
+</code></pre>
+
+<p>
+Burada:
+<ul>
+  <li><code>useState</code> ile bir <strong>isLoggedIn</strong> durumu oluşturduk.</li>
+  <li><strong>Ternary (koşul ? doğruysa : yanlışsa)</strong> yapısıyla JSX'i koşullu olarak render ettik.</li>
+</ul>
+</p>
+
+<p>
+Bu teknik, menüler, kullanıcı profilleri veya yönetici sayfaları gibi farklı rollerin farklı arayüzler görmesi gereken projelerde sıkça kullanılır.
+</p>
+
+<hr />
+
+<h2>2. State'i Props Olarak Kullanma 🔁</h2>
+
+<p>
+React’te <strong>state</strong>, sadece bulunduğu component içinde tanımlanır.  
+Ancak bu state’i başka bir component’te kullanmak istersek, onu <strong>props</strong> olarak alt bileşene geçirebiliriz.
+</p>
+
+<p><strong>Örnek:</strong> Bir sayacı alt bileşene gönderelim:</p>
+
+<pre><code class="language-tsx">
+import React, { useState } from "react";
+
+type DisplayProps = {
+  value: number;
+};
+
+const Display: React.FC&lt;DisplayProps&gt; = ({ value }) =&gt; {
+  return &lt;h3&gt;Güncel Sayı: {value}&lt;/h3&gt;;
+};
+
+const CounterApp: React.FC = () =&gt; {
+  const [count, setCount] = useState&lt;number&gt;(0);
+
+  return (
+    &lt;div style={{ textAlign: "center", marginTop: "20px" }}&gt;
+      &lt;Display value={count} /&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;Arttır&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(count - 1)} style={{ marginLeft: "10px" }}&gt;Azalt&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default CounterApp;
+</code></pre>
+
+<p>
+Bu örnekte:
+<ul>
+  <li>Parent component’te (<code>CounterApp</code>) bir state tanımladık.</li>
+  <li>Bu state’i <strong>props</strong> olarak child component’e (<code>Display</code>) aktardık.</li>
+  <li>Parent’ta state değiştiğinde child component otomatik olarak güncellendi.</li>
+</ul>
+</p>
+
+<p>
+Bu yapı, bileşenleri küçük, bağımsız ve yeniden kullanılabilir hale getirir.  
+Örneğin: <em>Dashboard → Widget</em> veya <em>Form → Input</em> gibi yapılar bu prensiple oluşturulur.
+</p>
+
+<hr />
+
+<h2>3. Uygulama Çalışması — Yaşam Döngüsü ve useEffect 🌀</h2>
+
+<p>
+Şimdi bir API’den veri çekip, <strong>component yaşam döngüsü</strong> mantığını inceleyelim.  
+React’te bu işlemler <code>useEffect</code> hook’u ile yapılır.
+</p>
+
+<p>
+<code>useEffect</code> üç temel durumda çalışır:
+</p>
+
+<ul>
+  <li>Component ilk yüklendiğinde (<strong>componentDidMount</strong>)</li>
+  <li>Belirli bir state veya prop değiştiğinde (<strong>componentDidUpdate</strong>)</li>
+  <li>Component kaldırıldığında (<strong>componentWillUnmount</strong>)</li>
+</ul>
+
+<p><strong>Örnek:</strong> Kullanıcı sayısını gösteren bir simülasyon</p>
+
+<pre><code class="language-tsx">
+import React, { useState, useEffect } from "react";
+
+const UserCounter: React.FC = () =&gt; {
+  const [userCount, setUserCount] = useState&lt;number&gt;(0);
+
+  // Component yüklendiğinde çalışır
+  useEffect(() =&gt; {
+    console.log("Component yüklendi ✅");
+    const interval = setInterval(() =&gt; {
+      setUserCount((prev) =&gt; prev + 1);
+    }, 1000);
+
+    // Cleanup (component kaldırıldığında çalışır)
+    return () =&gt; {
+      console.log("Component kaldırıldı 🧹");
+      clearInterval(interval);
+    };
+  }, []); // Boş bağımlılık: sadece ilk yüklemede çalışır
+
+  return (
+    &lt;div style={{ textAlign: "center", marginTop: "30px" }}&gt;
+      &lt;h3&gt;Aktif Kullanıcı Sayısı: {userCount}&lt;/h3&gt;
+      &lt;p&gt;(Her 1 saniyede bir kullanıcı artıyor...)&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default UserCounter;
+</code></pre>
+
+<p>
+Bu örnekte:
+<ul>
+  <li><code>useEffect</code> component yüklendiğinde bir <strong>interval</strong> başlattı.</li>
+  <li><strong>Cleanup</strong> kısmında (return fonksiyonu) bu interval temizlendi.</li>
+  <li>Bu yapı, React’in yaşam döngüsünü <strong>fonksiyonel component</strong> mantığıyla yönetmemizi sağlar.</li>
+</ul>
+</p>
+
+<hr />
+
+<h3>📘 Özet:</h3>
+
+<ul>
+  <li><strong>Koşullu render</strong>, kullanıcıya duruma göre farklı JSX blokları göstermeyi sağlar.</li>
+  <li><strong>State'i props olarak kullanmak</strong>, bileşenler arasında veri paylaşımını mümkün kılar.</li>
+  <li><strong>useEffect</strong> hook’u, React bileşenlerinin yaşam döngüsünü yönetmek için kullanılır.</li>
+  <li><strong>Cleanup fonksiyonu</strong>, bellek sızıntılarını engeller ve component kaldırıldığında çalışır.</li>
+</ul>

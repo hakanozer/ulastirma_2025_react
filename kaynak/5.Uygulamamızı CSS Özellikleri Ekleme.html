@@ -1,0 +1,255 @@
+<h1>React’te Stil Yönetimi ve Event Handling 🎨⚙️</h1>
+
+<p>
+React sadece etkileşimli bir arayüz oluşturmakla kalmaz, aynı zamanda görsel açıdan güçlü ve dinamik uygulamalar tasarlamamıza da olanak tanır.  
+Bu bölümde CSS ekleme yöntemlerini, React Developer Tools kullanımını ve event (olay) yönetimini öğreneceğiz.
+</p>
+
+<hr />
+
+<h2>5. Uygulamamıza CSS Özellikleri Ekleme 🎨</h2>
+
+<p>
+React uygulamasında stil vermenin birkaç farklı yöntemi vardır. En sık kullanılan yöntemler şunlardır:
+</p>
+
+<ul>
+  <li><strong>Harici CSS dosyası eklemek</strong></li>
+  <li><strong>Inline (satır içi) stil kullanmak</strong></li>
+  <li><strong>CSS Modules</strong> yapısını kullanmak</li>
+</ul>
+
+<h3>👉 Harici CSS Dosyası Kullanımı</h3>
+<p>
+Klasik yaklaşım olan harici CSS dosyalarıyla stillendirme oldukça basittir.
+</p>
+
+<pre><code class="language-tsx">
+// App.tsx
+import "./App.css";
+
+function App() {
+  return &lt;h1 className="title"&gt;Merhaba React! 👋&lt;/h1&gt;;
+}
+
+export default App;
+</code></pre>
+
+<pre><code class="language-css">
+/* App.css */
+.title {
+  color: #007bff;
+  text-align: center;
+  margin-top: 30px;
+  font-family: "Arial";
+}
+</code></pre>
+
+<p>
+Bu yöntemle CSS dosyasını import edip doğrudan className üzerinden kullanabiliriz.
+</p>
+
+<h3>👉 Inline (Satır İçi) Stil Kullanımı</h3>
+
+<p>
+Bazı durumlarda, dinamik olarak değişen stiller için inline stil kullanmak daha uygundur.
+</p>
+
+<pre><code class="language-tsx">
+function InlineStyleExample() {
+  const style = {
+    color: "white",
+    backgroundColor: "teal",
+    padding: "10px",
+    borderRadius: "8px",
+    textAlign: "center",
+  };
+
+  return &lt;h2 style={style}&gt;Inline Style Örneği 🌈&lt;/h2&gt;;
+}
+
+export default InlineStyleExample;
+</code></pre>
+
+<p>
+React’te inline stil kullanırken CSS özellikleri <strong>camelCase</strong> biçiminde yazılır (örneğin <code>backgroundColor</code>).
+</p>
+
+<hr />
+
+<h2>6. React Developer Tools 🔍</h2>
+
+<p>
+React Developer Tools, geliştiricilerin React bileşenlerini ve state yapısını kolayca incelemesini sağlayan güçlü bir tarayıcı eklentisidir.
+</p>
+
+<p><strong>Kurulum:</strong></p>
+<ul>
+  <li>Chrome Web Store’a gidin → “React Developer Tools” eklentisini yükleyin.</li>
+  <li>Tarayıcıda React uygulamasını açın.</li>
+  <li>DevTools’ta <strong>“Components”</strong> ve <strong>“Profiler”</strong> sekmeleri görünecektir.</li>
+</ul>
+
+<p><strong>Kullanım Alanları:</strong></p>
+<ul>
+  <li>Component hiyerarşisini görüntüleme</li>
+  <li>Props ve state değerlerini inceleme</li>
+  <li>Performans ölçümleri yapma (Profiler sekmesi)</li>
+</ul>
+
+<p>
+💡 Özellikle “Components” sekmesinde her bileşenin hangi verileri aldığı, hangi state’leri tuttuğu ve nasıl render edildiği rahatlıkla izlenebilir.
+</p>
+
+<hr />
+
+<h2>7. Uygulamamızı Stillendirme 🎭</h2>
+
+<p>
+Şimdi React bileşenimize biraz stil ekleyerek görsel olarak geliştirelim.  
+Hem harici CSS hem de inline stilleri birlikte kullanalım.
+</p>
+
+<pre><code class="language-tsx">
+// StyledCard.tsx
+import "./Card.css";
+
+type CardProps = {
+  title: string;
+  description: string;
+};
+
+const StyledCard: React.FC&lt;CardProps&gt; = ({ title, description }) =&gt; {
+  return (
+    &lt;div className="card"&gt;
+      &lt;h2&gt;{title}&lt;/h2&gt;
+      &lt;p&gt;{description}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default StyledCard;
+</code></pre>
+
+<pre><code class="language-css">
+/* Card.css */
+.card {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  width: 300px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+</code></pre>
+
+<p><strong>Kullanım:</strong></p>
+
+<pre><code class="language-tsx">
+// App.tsx
+import StyledCard from "./StyledCard";
+
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;StyledCard
+        title="React CSS Öğreniyoruz 🎨"
+        description="Bu bileşen hem harici hem de hover efektli CSS içeriyor."
+      /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+</code></pre>
+
+<p>
+Sonuç olarak görsel olarak hoş, tekrar kullanılabilir ve sade bir kart bileşeni elde ettik.
+</p>
+
+<hr />
+
+<h2>8. Event Handler Oluşturma 🖱️</h2>
+
+<p>
+React'te kullanıcı etkileşimlerini yönetmek için <strong>event handler</strong> kullanılır.  
+Örneğin tıklama, input değişimi veya form gönderme gibi olaylar bu şekilde yönetilir.
+</p>
+
+<h3>👉 onClick Event</h3>
+
+<pre><code class="language-tsx">
+import React, { useState } from "react";
+
+const ClickExample: React.FC = () =&gt; {
+  const [count, setCount] = useState&lt;number&gt;(0);
+
+  const handleClick = () =&gt; {
+    setCount(count + 1);
+  };
+
+  return (
+    &lt;div style={{ textAlign: "center", marginTop: "20px" }}&gt;
+      &lt;h2&gt;Tıklama Sayısı: {count}&lt;/h2&gt;
+      &lt;button onClick={handleClick}&gt;Tıkla! 👆&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default ClickExample;
+</code></pre>
+
+<p>
+Burada:
+<ul>
+  <li><code>handleClick</code> fonksiyonu bir event handler’dır.</li>
+  <li><code>onClick</code> attribute’una bu fonksiyon referans olarak verilmiştir.</li>
+  <li>Her tıklamada state güncellenir, component yeniden render edilir.</li>
+</ul>
+</p>
+
+<h3>👉 onChange Event</h3>
+
+<pre><code class="language-tsx">
+import React, { useState } from "react";
+
+const InputExample: React.FC = () =&gt; {
+  const [text, setText] = useState&lt;string&gt;("");
+
+  const handleChange = (event: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+    setText(event.target.value);
+  };
+
+  return (
+    &lt;div style={{ textAlign: "center", marginTop: "20px" }}&gt;
+      &lt;input type="text" value={text} onChange={handleChange} placeholder="Metin girin..." /&gt;
+      &lt;p&gt;Girilen Metin: {text}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default InputExample;
+</code></pre>
+
+<p>
+Bu örnekte, input alanındaki her değişiklik <strong>state</strong> üzerinde saklanıyor.  
+Bu yapı “controlled component” olarak adlandırılır.
+</p>
+
+<hr />
+
+<h3>📘 Özet:</h3>
+
+<ul>
+  <li><strong>CSS ekleme yöntemleri:</strong> Harici dosya, inline stil, CSS Modules</li>
+  <li><strong>React Developer Tools:</strong> Component ve state analizi için kullanılır</li>
+  <li><strong>Stil uygulama:</strong> Hover efektleri, geçişler, responsive tasarımlar</li>
+  <li><strong>Event handling:</strong> onClick, onChange, onSubmit gibi kullanıcı etkileşimlerini yönetir</li>
+</ul>

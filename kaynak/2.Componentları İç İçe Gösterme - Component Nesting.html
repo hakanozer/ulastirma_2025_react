@@ -1,0 +1,290 @@
+<h1>React Componentları İç İçe Gösterme (Component Nesting) 🧩</h1>
+
+<p>
+React’te bileşenler (component’ler), küçük yapılardan büyük yapılara doğru bir hiyerarşi içinde oluşturulur. 
+Bu yapıya <strong>component nesting</strong> (bileşenlerin iç içe kullanılması) denir. 
+Böylece projeler daha düzenli, modüler ve yönetilebilir hale gelir.
+</p>
+
+<hr />
+
+<h2>1. Uygulama Çalışması</h2>
+<p>
+Basit bir blog uygulaması düşünelim. 
+Her <strong>Post</strong> bileşeni içinde <strong>Comment</strong> bileşenleri yer alacak. 
+Bu, component nesting’in tipik bir örneğidir.
+</p>
+
+<pre><code class="language-tsx">
+import React from "react";
+
+type CommentProps = {
+  author: string;
+  text: string;
+};
+
+const Comment: React.FC&lt;CommentProps&gt; = ({ author, text }) =&gt; {
+  return (
+    &lt;div style={{ marginLeft: "20px", borderLeft: "3px solid #ccc", paddingLeft: "10px" }}&gt;
+      &lt;p&gt;&lt;strong&gt;{author}:&lt;/strong&gt; {text}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+type PostProps = {
+  title: string;
+  content: string;
+};
+
+const Post: React.FC&lt;PostProps&gt; = ({ title, content }) =&gt; {
+  return (
+    &lt;div style={{ border: "1px solid #ddd", padding: "15px", borderRadius: "8px", marginBottom: "15px" }}&gt;
+      &lt;h3&gt;{title}&lt;/h3&gt;
+      &lt;p&gt;{content}&lt;/p&gt;
+      &lt;Comment author="Hakan" text="Harika yazı olmuş!" /&gt;
+      &lt;Comment author="Ayşe" text="Oldukça bilgilendirici, teşekkürler!" /&gt;
+    &lt;/div&gt;
+  );
+};
+
+const App: React.FC = () =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;Post title="React Nedir?" content="React, UI geliştirmek için kullanılan bir JS kütüphanesidir." /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+</code></pre>
+
+<p>
+Bu örnekte, <code>Post</code> component’i içinde <code>Comment</code> component’leri kullanarak bir iç içe yapı oluşturduk. 
+Bu yapı, büyük uygulamalarda bileşenlerin mantıksal olarak birbirine bağlanmasını kolaylaştırır.
+</p>
+
+<hr />
+
+<h2>2. React Props Sistemi</h2>
+
+<p>
+React’te <strong>props</strong> (properties), bir component’e dışarıdan veri göndermenin yoludur. 
+Bir üst bileşen (parent) alt bileşene (child) props aracılığıyla veri aktarır. 
+Props, component’lerin dinamik ve tekrar kullanılabilir olmasını sağlar.
+</p>
+
+<pre><code class="language-tsx">
+type CardProps = {
+  title: string;
+  description: string;
+};
+
+const Card: React.FC&lt;CardProps&gt; = ({ title, description }) =&gt; {
+  return (
+    &lt;div style={{ background: "#f9f9f9", padding: "10px", borderRadius: "8px" }}&gt;
+      &lt;h4&gt;{title}&lt;/h4&gt;
+      &lt;p&gt;{description}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+</code></pre>
+
+<p>
+Bu yapı sayesinde, aynı component farklı içeriklerle kullanılabilir. Bu da projede <strong>kod tekrarını azaltır</strong>.
+</p>
+
+<hr />
+
+<h2>3. Props ile Child Component’e Data Geçme</h2>
+
+<p>
+Parent component, child component’e props yardımıyla veri aktarabilir. 
+Bu, React’in veri akışının en temel mekanizmasıdır.
+</p>
+
+<pre><code class="language-tsx">
+const Parent: React.FC = () =&gt; {
+  const student = { name: "Mehmet", grade: 92 };
+
+  return &lt;Child name={student.name} grade={student.grade} /&gt;;
+};
+
+type ChildProps = {
+  name: string;
+  grade: number;
+};
+
+const Child: React.FC&lt;ChildProps&gt; = ({ name, grade }) =&gt; {
+  return &lt;p&gt;{name} adlı öğrencinin notu: {grade}&lt;/p&gt;;
+};
+</code></pre>
+
+<p>
+Bu yöntem, <strong>verinin yukarıdan aşağıya doğru (top-down)</strong> akmasını sağlar. 
+React bu sayede bileşenlerin birbirinden bağımsız kalmasına yardımcı olur.
+</p>
+
+<hr />
+
+<h2>4. Tekrar Kullanılabilir Component Yapısı</h2>
+
+<p>
+React’in gücü, component’lerin <strong>tekrar kullanılabilir</strong> olmasından gelir. 
+Aynı yapıyı birçok farklı veriyle kullanabilirsiniz.
+</p>
+
+<pre><code class="language-tsx">
+const ProductCard: React.FC&lt;{ name: string; price: number }&gt; = ({ name, price }) =&gt; {
+  return (
+    &lt;div style={{ border: "1px solid #ddd", padding: "10px", margin: "5px", borderRadius: "6px" }}&gt;
+      &lt;h4&gt;{name}&lt;/h4&gt;
+      &lt;p&gt;₺{price}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+const App: React.FC = () =&gt; {
+  return (
+    &lt;div style={{ display: "flex" }}&gt;
+      &lt;ProductCard name="Kulaklık" price={500} /&gt;
+      &lt;ProductCard name="Mouse" price={250} /&gt;
+      &lt;ProductCard name="Klavye" price={350} /&gt;
+    &lt;/div&gt;
+  );
+};
+</code></pre>
+
+<p>
+Bu sayede tek bir component yapısını birçok farklı senaryoda kullanabilirsiniz. 
+Bu yaklaşım, <strong>DRY (Don’t Repeat Yourself)</strong> prensibine uygundur.
+</p>
+
+<hr />
+
+<h2>5. Props Children</h2>
+
+<p>
+React’te özel bir prop olan <code>children</code>, component içine dinamik olarak içerik yerleştirmeye yarar. 
+Bu özellik, kapsayıcı (wrapper) bileşenler oluşturmak için kullanılır.
+</p>
+
+<pre><code class="language-tsx">
+type CardProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+const Card: React.FC&lt;CardProps&gt; = ({ title, children }) =&gt; {
+  return (
+    &lt;div style={{ border: "1px solid #bbb", padding: "15px", borderRadius: "8px" }}&gt;
+      &lt;h3&gt;{title}&lt;/h3&gt;
+      &lt;div&gt;{children}&lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+const App: React.FC = () =&gt; {
+  return (
+    &lt;Card title="React Öğreniyoruz"&gt;
+      &lt;p&gt;Bu alandaki içerik, children prop'u ile gönderildi.&lt;/p&gt;
+      &lt;button&gt;Devam Et&lt;/button&gt;
+    &lt;/Card&gt;
+  );
+};
+</code></pre>
+
+<p>
+Bu teknik, esnek ve dinamik bileşen yapıları kurmak için oldukça etkilidir. 
+Örneğin modal, card veya layout bileşenlerinde sıkça kullanılır.
+</p>
+
+<hr />
+
+<h2>6. Uygulama Çalışması</h2>
+
+<p>
+Şimdi children, props ve component nesting’i birleştirerek basit bir dashboard sayfası yapalım.
+</p>
+
+<pre><code class="language-tsx">
+import React from "react";
+
+type WidgetProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+const Widget: React.FC&lt;WidgetProps&gt; = ({ title, children }) =&gt; {
+  return (
+    &lt;div style={{ border: "1px solid #ccc", padding: "10px", margin: "10px", borderRadius: "6px", width: "200px" }}&gt;
+      &lt;h4&gt;{title}&lt;/h4&gt;
+      &lt;div&gt;{children}&lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+const Dashboard: React.FC = () =&gt; {
+  return (
+    &lt;div style={{ display: "flex" }}&gt;
+      &lt;Widget title="Kullanıcı Sayısı"&gt;
+        &lt;p&gt;120 aktif kullanıcı&lt;/p&gt;
+      &lt;/Widget&gt;
+      &lt;Widget title="Satışlar"&gt;
+        &lt;p&gt;₺45.000&lt;/p&gt;
+      &lt;/Widget&gt;
+      &lt;Widget title="Mesajlar"&gt;
+        &lt;ul&gt;
+          &lt;li&gt;Yeni mesaj 1&lt;/li&gt;
+          &lt;li&gt;Yeni mesaj 2&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/Widget&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Dashboard;
+</code></pre>
+
+<p>
+Bu örnek, <code>children</code> ve <code>component nesting</code> kullanımının pratik bir uygulamasıdır.
+Her <code>Widget</code> component’i kendi içeriğini dışarıdan children olarak alır.
+</p>
+
+<hr />
+
+<h2>7. Class Based Component ve Functional Component Arasındaki Farklar</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <tr>
+    <th>Karşılaştırma</th>
+    <th>Class Component</th>
+    <th>Functional Component</th>
+  </tr>
+  <tr>
+    <td>Tanım Şekli</td>
+    <td><code>class MyComponent extends React.Component</code></td>
+    <td><code>const MyComponent: React.FC = () =&gt; {...}</code></td>
+  </tr>
+  <tr>
+    <td>Durum Yönetimi (State)</td>
+    <td><code>this.state</code> ve <code>this.setState()</code> kullanılır.</td>
+    <td><code>useState</code> Hook’u ile yönetilir.</td>
+  </tr>
+  <tr>
+    <td>Yaşam Döngüsü</td>
+    <td><code>componentDidMount</code>, <code>componentDidUpdate</code> gibi metotlar kullanılır.</td>
+    <td><code>useEffect</code> Hook’u ile yapılır.</td>
+  </tr>
+  <tr>
+    <td>Performans</td>
+    <td>Daha fazla kod ve karmaşıklık içerir.</td>
+    <td>Daha hafif, basit ve performanslıdır.</td>
+  </tr>
+  <tr>
+    <td>Kullanım Durumu</td>
+    <td>Eski React projelerinde görülür.</td>
+    <td>Modern React uygulamalarında standarttır.</td>
+  </tr>
+</table>
+
+<p>

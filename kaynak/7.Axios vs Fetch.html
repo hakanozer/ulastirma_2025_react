@@ -1,0 +1,268 @@
+<h1>React’te API İstekleri: Axios vs Fetch ve JWT Yönetimi 🌐🔐</h1>
+
+<p>
+React uygulamalarında API ile iletişim çok önemlidir.  
+Veri çekme ve gönderme işlemleri için iki temel yöntem vardır: <strong>fetch</strong> ve <strong>axios</strong>.  
+Ayrıca modern web uygulamalarında <strong>JWT (JSON Web Token)</strong> ile kimlik doğrulama ve global kontrol önemlidir.
+</p>
+
+<hr />
+
+<h2>1. Axios vs Fetch ⚡</h2>
+
+<p>
+API çağrıları yaparken <strong>fetch</strong> ve <strong>axios</strong> arasındaki farkları bilmek önemlidir:
+</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+<tr>
+<th>Özellik</th>
+<th>Fetch</th>
+<th>Axios</th>
+</tr>
+<tr>
+<td>Syntax</td>
+<td>Native, promise tabanlı</td>
+<td>Daha kısa ve kolay, promise tabanlı</td>
+</tr>
+<tr>
+<td>Response</td>
+<td>Manual JSON parse gerekir</td>
+<td>Otomatik JSON parse</td>
+</tr>
+<tr>
+<td>Hata Yönetimi</td>
+<td>.then + .catch</td>
+<td>Daha kapsamlı; status kontrolü kolay</td>
+</tr>
+<tr>
+<td>Request Timeout</td>
+<td>Manuel implement</td>
+<td>Varsayılan destek</td>
+</tr>
+<tr>
+<td>Intercept</td>
+<td>Yok</td>
+<td>Request & Response interceptors</td>
+</tr>
+</table>
+
+<p>
+💡 Özet: Fetch basit ve native bir çözüm sunarken, Axios daha profesyonel projelerde kolaylık ve ek özellikler sağlar.
+</p>
+
+<hr />
+
+<h2>2. Axios ile API'a İstek Atma 🔄</h2>
+
+<pre><code class="language-tsx">
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+const AxiosExample: React.FC = () =&gt; {
+  const [users, setUsers] = useState&lt;User[]&gt;([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    const fetchUsers = async () =&gt; {
+      try {
+        const response = await axios.get("https://jsonplaceholder.typicode.com/users");
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Hata oluştu:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  if (loading) return &lt;p&gt;Yükleniyor...&lt;/p&gt;;
+
+  return (
+    &lt;div style={{ textAlign: "center" }}&gt;
+      &lt;h2&gt;Kullanıcı Listesi (Axios)&lt;/h2&gt;
+      &lt;ul&gt;
+        {users.map((user) =&gt; (
+          &lt;li key={user.id}&gt;{user.name} - {user.email}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default AxiosExample;
+</code></pre>
+
+<hr />
+
+<h2>3. API’dan Gelen Data ile Component’u Render Etme 🖥️</h2>
+
+<p>
+Axios ile çekilen veriyi state’e kaydettikten sonra, component içinde render edebiliriz.  
+Bu sayede veri güncellendiğinde UI otomatik olarak değişir.
+</p>
+
+<pre><code class="language-tsx">
+// UserCard.tsx
+import React from "react";
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+type Props = {
+  user: User;
+};
+
+const UserCard: React.FC&lt;Props&gt; = ({ user }) =&gt; {
+  return (
+    &lt;div style={{
+      border: "1px solid #ccc", 
+      margin: "10px", 
+      padding: "10px", 
+      borderRadius: "8px"
+    }}&gt;
+      &lt;h3&gt;{user.name}&lt;/h3&gt;
+      &lt;p&gt;{user.email}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default UserCard;
+</code></pre>
+
+<pre><code class="language-tsx">
+// App.tsx
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import UserCard from "./UserCard";
+
+const App: React.FC = () =&gt; {
+  const [users, setUsers] = useState&lt;any[]&gt;([]);
+
+  useEffect(() =&gt; {
+    axios.get("https://jsonplaceholder.typicode.com/users")
+      .then(res =&gt; setUsers(res.data))
+      .catch(err =&gt; console.error(err));
+  }, []);
+
+  return (
+    &lt;div style={{ textAlign: "center" }}&gt;
+      &lt;h2&gt;User Cards&lt;/h2&gt;
+      {users.map(user =&gt; &lt;UserCard key={user.id} user={user} /&gt;)}
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+</code></pre>
+
+<hr />
+
+<h2>4. API’dan Gelen Veriyi Browser’da Listeleme 📃</h2>
+
+<p>
+API’dan gelen veriyi listelerken <strong>map</strong> fonksiyonu ile her bir elemanı render edebiliriz.  
+Bu yaklaşım özellikle tablo veya liste tasarımlarında çok kullanışlıdır.
+</p>
+
+<pre><code class="language-tsx">
+<ul>
+  {users.map(user =&gt; (
+    &lt;li key={user.id}&gt;{user.name} - {user.email}&lt;/li&gt;
+  ))}
+</ul>
+</code></pre>
+
+<p>
+💡 İpucu: Her list item için <strong>unique key</strong> kullanmak React performansı ve hata önleme için önemlidir.
+</p>
+
+<hr />
+
+<h2>5. JWT Değeri ve Kullanımı 🔑</h2>
+
+<p>
+JWT (JSON Web Token), kullanıcının kimliğini doğrulamak ve yetkilendirme yapmak için kullanılır.  
+React tarafında JWT genellikle <code>localStorage</code> veya <code>sessionStorage</code> içinde saklanır.
+</p>
+
+<pre><code class="language-tsx">
+// Token saklama
+localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
+
+// Token okuma
+const token = localStorage.getItem("token");
+</code></pre>
+
+<p>
+JWT ile API isteklerinde header içinde token göndermek güvenli bir yöntemdir:</p>
+
+<pre><code class="language-tsx">
+axios.get("https://api.example.com/protected", {
+  headers: { Authorization: `Bearer ${token}` }
+});
+</code></pre>
+
+<hr />
+
+<h2>6. Global JWT Control 🌍</h2>
+
+<p>
+Projelerde JWT kontrolünü merkezi bir yerde yönetmek faydalıdır.  
+Bu sayede tüm API çağrıları token ile otomatik çalışabilir ve kullanıcı oturumu global olarak kontrol edilir.
+</p>
+
+<pre><code class="language-tsx">
+// axiosInstance.ts
+import axios from "axios";
+
+const token = localStorage.getItem("token");
+
+const axiosInstance = axios.create({
+  baseURL: "https://api.example.com",
+  headers: {
+    Authorization: token ? `Bearer ${token}` : "",
+  },
+});
+
+export default axiosInstance;
+
+// Kullanım
+import axiosInstance from "./axiosInstance";
+
+axiosInstance.get("/users")
+  .then(res =&gt; console.log(res.data))
+  .catch(err =&gt; console.error(err));
+</code></pre>
+
+<p>
+Bu yapı sayesinde:
+<ul>
+  <li>Tüm API istekleri otomatik token içerir</li>
+  <li>Tek bir noktadan token güncellenebilir</li>
+  <li>React component’leri sade ve temiz kalır</li>
+</ul>
+</p>
+
+<hr />
+
+<h3>📘 Özet</h3>
+
+<ul>
+  <li><strong>Fetch:</strong> Native, basit API çağrıları için yeterli.</li>
+  <li><strong>Axios:</strong> Daha profesyonel, interceptors, timeout ve kolay JSON parse sağlar.</li>
+  <li><strong>Component render:</strong> API’dan gelen veri state’e kaydedilir ve JSX içinde render edilir.</li>
+  <li><strong>JWT:</strong> Kullanıcı doğrulaması için token saklanır ve API header’ında gönderilir.</li>
+  <li><strong>Global JWT Control:</strong> Tek bir axios instance ile tüm API çağrılarında token yönetimi yapılabilir.</li>
+</ul>
+

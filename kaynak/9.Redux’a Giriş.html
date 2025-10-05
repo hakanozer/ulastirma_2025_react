@@ -1,0 +1,200 @@
+<h1>React ile Redux’a Giriş 🗂️</h1>
+
+<p>
+React uygulamalarında state yönetimi büyüdükçe karmaşıklaşır.  
+Redux, merkezi bir <strong>store</strong> üzerinden state’i yönetmemizi sağlayan güçlü bir kütüphanedir.  
+Bu sayede component’ler arası veri paylaşımı daha düzenli ve öngörülebilir olur.
+</p>
+
+<hr />
+
+<h2>1. Redux Store Nedir? 🏬</h2>
+
+<p>
+Redux store, uygulamanın tüm state’lerini tek bir yerde tutan merkezi yapıdır.  
+State değişimleri yalnızca <strong>actions</strong> ve <strong>reducers</strong> üzerinden yapılır.
+</p>
+
+<pre><code class="language-tsx">
+// store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "./counterSlice";
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+});
+
+// RootState ve AppDispatch tipleri
+export type RootState = ReturnType&lt;typeof store.getState&gt;;
+export type AppDispatch = typeof store.dispatch;
+</code></pre>
+
+<hr />
+
+<h2>2. Redux Actions 📩</h2>
+
+<p>
+Action, state’i değiştirmek için gönderilen <strong>planlı talimat</strong>tır.  
+Genellikle bir <code>type</code> ve isteğe bağlı <code>payload</code> içerir.
+</p>
+
+<pre><code class="language-tsx">
+// counterSlice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+type CounterState = { value: number };
+
+const initialState: CounterState = { value: 0 };
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState,
+  reducers: {
+    increment: (state) =&gt; { state.value += 1; },
+    decrement: (state) =&gt; { state.value -= 1; },
+    incrementByAmount: (state, action: PayloadAction&lt;number&gt;) =&gt; {
+      state.value += action.payload;
+    },
+  },
+});
+
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export default counterSlice.reducer;
+</code></pre>
+
+<p>
+Burada <code>increment</code>, <code>decrement</code> ve <code>incrementByAmount</code> birer action’dır.
+</p>
+
+<hr />
+
+<h2>3. Redux Reducers ⚙️</h2>
+
+<p>
+Reducer, action geldiğinde state’in nasıl değişeceğini belirler.  
+Önemli: Reducer saf bir fonksiyon olmalıdır (<strong>pure function</strong>).
+</p>
+
+<pre><code class="language-tsx">
+// Yukarıdaki counterSlice zaten reducer’ı oluşturuyor
+// increment action geldiğinde state.value 1 artar
+// decrement action geldiğinde state.value 1 azalır
+</code></pre>
+
+<hr />
+
+<h2>4. Store Subscriptions 🔔</h2>
+
+<p>
+Redux store’a abone olarak state değişikliklerini dinleyebiliriz.  
+Genellikle React içinde <code>useSelector</code> hook’u ile yapılır.
+</p>
+
+<pre><code class="language-tsx">
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
+
+const CounterDisplay: React.FC = () =&gt; {
+  const count = useSelector((state: RootState) =&gt; state.counter.value);
+
+  return &lt;h2&gt;Count: {count}&lt;/h2&gt;;
+};
+
+export default CounterDisplay;
+</code></pre>
+
+<hr />
+
+<h2>5. Redux Kurulum 🛠️</h2>
+
+<p>
+Redux ve React ile entegrasyonu için gerekli paketler:
+</p>
+
+<pre><code>
+npm install @reduxjs/toolkit react-redux
+</code></pre>
+
+<p>
+Root component’te <strong>Provider</strong> ile store’u React uygulamasına bağlamamız gerekir:
+</p>
+
+<pre><code class="language-tsx">
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+root.render(
+  &lt;Provider store={store}&gt;
+    &lt;App /&gt;
+  &lt;/Provider&gt;
+);
+</code></pre>
+
+<hr />
+
+<h2>6. useDispatch 🚀</h2>
+
+<p>
+Action’ları dispatch etmek için <code>useDispatch</code> hook’u kullanılır.  
+Bu sayede reducer’ı tetikleyebiliriz.
+</p>
+
+<pre><code class="language-tsx">
+import { useDispatch } from "react-redux";
+import { increment, decrement, incrementByAmount } from "./counterSlice";
+
+const CounterControls: React.FC = () =&gt; {
+  const dispatch = useDispatch();
+
+  return (
+    &lt;div style={{ textAlign: "center", marginTop: "20px" }}&gt;
+      &lt;button onClick={() =&gt; dispatch(increment())}&gt;Arttır&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch(decrement())} style={{ marginLeft: "10px" }}&gt;Azalt&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch(incrementByAmount(5))} style={{ marginLeft: "10px" }}&gt;+5&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default CounterControls;
+</code></pre>
+
+<hr />
+
+<h2>7. useSelector 👀</h2>
+
+<p>
+State’i component içinde okumak için <code>useSelector</code> kullanılır.  
+Bu hook, store’a abone olur ve ilgili state değiştiğinde component yeniden render edilir.
+</p>
+
+<pre><code class="language-tsx">
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
+
+const CounterValue: React.FC = () =&gt; {
+  const count = useSelector((state: RootState) =&gt; state.counter.value);
+
+  return &lt;h2 style={{ textAlign: "center" }}&gt;Güncel Sayı: {count}&lt;/h2&gt;;
+};
+
+export default CounterValue;
+</code></pre>
+
+<hr />
+
+<h3>📘 Özet</h3>
+
+<ul>
+  <li><strong>Store:</strong> Uygulamanın merkezi state deposudur.</li>
+  <li><strong>Actions:</strong> State’i değiştirmek için gönderilen talimatlardır.</li>
+  <li><strong>Reducers:</strong> Gelen action’a göre state’i günceller.</li>
+  <li><strong>useDispatch:</strong> Action’ları store’a gönderir.</li>
+  <li><strong>useSelector:</strong> Store’dan state okumamızı sağlar.</li>
+  <li><strong>Provider:</strong> Store’u React uygulamasına bağlar.</li>
+</ul>

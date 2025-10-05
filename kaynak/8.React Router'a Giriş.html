@@ -1,0 +1,151 @@
+<h1>React Router’a Giriş 🛣️</h1>
+
+<p>
+React uygulamalarında sayfalar arasında gezinmek için tek sayfa uygulaması (SPA) mantığıyla çalışırız.  
+React Router, SPA yapısında URL yönetimi ve sayfalar arası geçişleri kontrol etmek için kullanılan popüler bir kütüphanedir.
+</p>
+
+<hr />
+
+<h2>1. React Router Nedir? 🔗</h2>
+
+<p>
+React Router, uygulamanızda farklı sayfalar (routes) oluşturmanıza ve bu sayfalar arasında gezinmenize olanak tanır.  
+Sayfa yenilenmeden farklı bileşenler render edilir.
+</p>
+
+<pre><code class="language-tsx">
+// Kurulum
+// npm install react-router-dom@6
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+
+const App: React.FC = () =&gt; {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element=&lt;Home /&gt; /&gt;
+        &lt;Route path="/about" element=&lt;About /&gt; /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+};
+
+export default App;
+</code></pre>
+
+<p>
+Burada:
+<ul>
+  <li><code>BrowserRouter</code>: Tüm router yapısını kapsar.</li>
+  <li><code>Routes</code>: Route’ları gruplar.</li>
+  <li><code>Route</code>: Belirli path ve element eşlemesi yapar.</li>
+</ul>
+</p>
+
+<hr />
+
+<h2>2. Link ve NavLink 🔗</h2>
+
+<p>
+Sayfalar arasında gezinmek için <strong>Link</strong> veya <strong>NavLink</strong> kullanılır.  
+Fark: <code>NavLink</code>, aktif route olduğunda CSS sınıfı ekleyebilir.
+</p>
+
+<pre><code class="language-tsx">
+import { Link, NavLink } from "react-router-dom";
+
+const Navbar: React.FC = () =&gt; {
+  return (
+    &lt;nav style={{ textAlign: "center", margin: "20px" }}&gt;
+      &lt;Link to="/" style={{ margin: "10px" }}&gt;Anasayfa&lt;/Link&gt;
+      &lt;Link to="/about" style={{ margin: "10px" }}&gt;Hakkımızda&lt;/Link&gt;
+      &lt;br /&gt;&lt;br /&gt;
+      &lt;NavLink to="/" style={({ isActive }) =&gt; ({ fontWeight: isActive ? "bold" : "normal" }) }&gt;Anasayfa (NavLink)&lt;/NavLink&gt;
+      &lt;NavLink to="/about" style={({ isActive }) =&gt; ({ fontWeight: isActive ? "bold" : "normal" }) }&gt;Hakkımızda (NavLink)&lt;/NavLink&gt;
+    &lt;/nav&gt;
+  );
+};
+
+export default Navbar;
+</code></pre>
+
+<hr />
+
+<h2>3. Router Özellikleri ⚙️</h2>
+
+<p>
+React Router önemli özellikler sunar:
+</p>
+
+<ul>
+  <li><strong>Nested Routes:</strong> İç içe route’lar oluşturabilirsiniz.</li>
+  <li><strong>Route Params:</strong> Dinamik URL parametreleri yakalayabilirsiniz.</li>
+  <li><strong>Navigate:</strong> Programatik yönlendirme yapabilirsiniz.</li>
+  <li><strong>Outlet:</strong> Nested route içeriklerini render eder.</li>
+</ul>
+
+<hr />
+
+<h2>4. Route Parametreleri 📌</h2>
+
+<p>
+Dinamik sayfalar oluşturmak için route parametreleri kullanılır. Örnek: /user/5 gibi bir URL.
+</p>
+
+<pre><code class="language-tsx">
+import { useParams } from "react-router-dom";
+
+const UserProfile: React.FC = () =&gt; {
+  const { id } = useParams&lt;{ id: string }&gt;();
+  return &lt;h2&gt;Kullanıcı ID: {id}&lt;/h2&gt;;
+};
+
+export default UserProfile;
+</code></pre>
+
+<pre><code class="language-tsx">
+// App.tsx
+&lt;Route path="/user/:id" element=&lt;UserProfile /&gt; /&gt;
+</code></pre>
+
+<p>
+Bu sayede URL’deki <code>id</code> değerine erişebilir ve ilgili kullanıcı bilgilerini render edebilirsiniz.
+</p>
+
+<hr />
+
+<h2>5. React Router Switch Tag (v6 Routes)</h2>
+
+<p>
+React Router v6’da <code>Switch</code> yerine <code>Routes</code> kullanılır.  
+<code>Routes</code>, eşleşen ilk route’u render eder ve eskiden <code>Switch</code> olarak bilinen mantığı sağlar.
+</p>
+
+<pre><code class="language-tsx">
+import { Routes, Route } from "react-router-dom";
+
+&lt;Routes&gt;
+  &lt;Route path="/" element=&lt;Home /&gt; /&gt;
+  &lt;Route path="/about" element=&lt;About /&gt; /&gt;
+  &lt;Route path="*" element=&lt;NotFound /&gt; /&gt; // 404
+&lt;/Routes&gt;
+</code></pre>
+
+<p>
+💡 Özet: v6 ile <code>Routes</code> artık tüm switch mantığını yönetir ve nested routing daha kolaydır.
+</p>
+
+<hr />
+
+<h3>📘 Özet</h3>
+
+<ul>
+  <li><strong>React Router:</strong> SPA uygulamalarında sayfa ve URL yönetimi sağlar.</li>
+  <li><strong>Link & NavLink:</strong> Sayfa geçişleri sağlar, NavLink aktif route’u işaretler.</li>
+  <li><strong>Route Özellikleri:</strong> Nested routes, parametreler, navigate ve outlet ile zengin routing yapısı.</li>
+  <li><strong>Route Parametreleri:</strong> Dinamik sayfa oluşturmak için kullanılır.</li>
+  <li><strong>Switch → Routes:</strong> v6’da Switch yerine Routes kullanılır ve eşleşen ilk route render edilir.</li>
+</ul>

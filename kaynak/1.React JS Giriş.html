@@ -1,0 +1,212 @@
+<h1>React JS Giriş 🚀</h1>
+
+<p>
+React, kullanıcı arayüzleri oluşturmak için kullanılan, <strong>component tabanlı</strong> bir JavaScript kütüphanesidir. 
+Facebook tarafından geliştirilmiş olup, tek sayfa uygulamalar (<em>Single Page Applications</em>) oluşturmak için oldukça idealdir.
+TypeScript ile birlikte kullanıldığında, daha güvenli ve ölçeklenebilir uygulamalar geliştirilmesini sağlar.
+</p>
+
+<hr />
+
+<h2>1. Component Nedir?</h2>
+<p>
+React uygulamaları, birçok küçük bileşenden (<em>component</em>) oluşur. 
+Bu bileşenler, bir arayüzün yeniden kullanılabilir parçalarıdır. 
+Her component, kendi görünümünü ve davranışını yönetir. 
+Component yapısı, projenin okunabilirliğini ve sürdürülebilirliğini artırır.
+</p>
+
+<p><strong>Örnek:</strong> Basit bir selamlama bileşeni:</p>
+
+<pre><code class="language-tsx">
+import React from "react";
+
+type GreetingProps = {
+  name: string;
+};
+
+const Greeting: React.FC&lt;GreetingProps&gt; = ({ name }) =&gt; {
+  return &lt;h2&gt;Merhaba, {name}! 👋&lt;/h2&gt;;
+};
+
+export default Greeting;
+</code></pre>
+
+<p>
+Yukarıdaki örnekte, <code>Greeting</code> adlı bir component tanımladık. 
+Component, dışarıdan bir <code>name</code> prop’u alıyor ve ekrana bir selamlama mesajı basıyor.
+</p>
+
+<hr />
+
+<h2>2. Props'lara Giriş</h2>
+<p>
+<code>Props</code> (properties), component’ler arasında veri taşımamızı sağlayan mekanizmadır. 
+React’te veri akışı genellikle tek yönlüdür (parent → child). 
+Bu, uygulama verilerinin yönetimini daha tahmin edilebilir hale getirir.
+</p>
+
+<p><strong>Örnek:</strong> Props kullanımı</p>
+
+<pre><code class="language-tsx">
+import React from "react";
+
+type UserCardProps = {
+  username: string;
+  age: number;
+};
+
+const UserCard: React.FC&lt;UserCardProps&gt; = ({ username, age }) =&gt; {
+  return (
+    &lt;div style={{ border: "1px solid #ccc", padding: "10px", borderRadius: "8px" }}&gt;
+      &lt;h3&gt;Kullanıcı Adı: {username}&lt;/h3&gt;
+      &lt;p&gt;Yaş: {age}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default UserCard;
+</code></pre>
+
+<p>
+Bu örnekte <code>UserCard</code> component’i iki prop alıyor: <code>username</code> ve <code>age</code>.
+Props’lar, bileşenlerin yeniden kullanılabilirliğini sağlar.
+</p>
+
+<p><strong>Kullanımı:</strong></p>
+
+<pre><code class="language-tsx">
+import React from "react";
+import UserCard from "./UserCard";
+
+const App: React.FC = () =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;UserCard username="Hakan" age={30} /&gt;
+      &lt;UserCard username="Ayşe" age={25} /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+</code></pre>
+
+<hr />
+
+<h2>3. Semantic UI CSS Kütüphanesi</h2>
+<p>
+React projelerinde CSS framework'leri kullanmak, hızlı ve şık arayüzler geliştirmenizi sağlar. 
+<code>Semantic UI</code>, bileşen tabanlı bir CSS framework’tür ve React ile mükemmel uyum sağlar.
+</p>
+
+<p><strong>Kurulum:</strong></p>
+
+<pre><code>npm install semantic-ui-css</code></pre>
+
+<p><strong>Kullanım:</strong></p>
+
+<pre><code class="language-tsx">
+import 'semantic-ui-css/semantic.min.css';
+import { Button } from 'semantic-ui-react';
+
+const App: React.FC = () =&gt; {
+  return (
+    &lt;div style={{ padding: "20px" }}&gt;
+      &lt;Button primary&gt;Kaydet&lt;/Button&gt;
+      &lt;Button secondary&gt;İptal&lt;/Button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+</code></pre>
+
+<p>
+Bu örnekte, <strong>Semantic UI React</strong> ile hazır buton component’lerini kullandık. 
+Bu sayede, stil dosyalarıyla uğraşmadan modern arayüzler oluşturabiliriz.
+</p>
+
+<hr />
+
+<h2>4. Component Oluşturma</h2>
+<p>
+Component’ler iki şekilde oluşturulabilir:
+<ul>
+  <li><strong>Function Component</strong> (günümüzde en çok tercih edilen)</li>
+  <li><strong>Class Component</strong> (eski React sürümlerinde yaygın)</li>
+</ul>
+</p>
+
+<p><strong>Function Component Örneği:</strong></p>
+
+<pre><code class="language-tsx">
+const WelcomeMessage: React.FC = () =&gt; {
+  return &lt;h1&gt;React Eğitimine Hoş Geldiniz! 🚀&lt;/h1&gt;;
+};
+</code></pre>
+
+<p><strong>Class Component Örneği (güncel projelerde önerilmez):</strong></p>
+
+<pre><code class="language-tsx">
+import React, { Component } from "react";
+
+class WelcomeMessage extends Component {
+  render() {
+    return &lt;h1&gt;React Eğitimine Hoş Geldiniz! 🚀&lt;/h1&gt;;
+  }
+}
+
+export default WelcomeMessage;
+</code></pre>
+
+<p>
+Function component’ler daha sade, test edilebilir ve <strong>Hooks</strong> kullanımıyla çok daha güçlüdür.
+</p>
+
+<hr />
+
+<h2>5. Uygulama Çalışması</h2>
+
+<p>
+Şimdi tüm öğrendiklerimizi küçük bir örnekle birleştirelim 👇
+</p>
+
+<pre><code class="language-tsx">
+import React from "react";
+import "semantic-ui-css/semantic.min.css";
+import { Card, Button } from "semantic-ui-react";
+
+type ProductProps = {
+  name: string;
+  price: number;
+  inStock: boolean;
+};
+
+const ProductCard: React.FC&lt;ProductProps&gt; = ({ name, price, inStock }) =&gt; {
+  return (
+    &lt;Card&gt;
+      &lt;Card.Content&gt;
+        &lt;Card.Header&gt;{name}&lt;/Card.Header&gt;
+        &lt;Card.Meta&gt;Fiyat: ₺{price}&lt;/Card.Meta&gt;
+        &lt;Card.Description&gt;
+          {inStock ? "Stokta var ✅" : "Stokta yok ❌"}
+        &lt;/Card.Description&gt;
+      &lt;/Card.Content&gt;
+      &lt;Card.Content extra&gt;
+        &lt;Button color="green"&gt;Sepete Ekle&lt;/Button&gt;
+      &lt;/Card.Content&gt;
+    &lt;/Card&gt;
+  );
+};
+
+const App: React.FC = () =&gt; {
+  return (
+    &lt;div style={{ display: "flex", gap: "1rem", padding: "20px" }}&gt;
+      &lt;ProductCard name="Kulaklık" price={500} inStock={true} /&gt;
+      &lt;ProductCard name="Klavye" price={350} inStock={false} /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+</code></pre>

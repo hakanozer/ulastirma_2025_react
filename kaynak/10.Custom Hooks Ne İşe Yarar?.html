@@ -1,0 +1,265 @@
+<h1>React Custom Hooks ve React Hooks’a Giriş 🪝</h1>
+
+<p>
+React Hooks, fonksiyon tabanlı component’lerde state ve lifecycle yönetimini yapmamızı sağlar.  
+Ayrıca, <strong>Custom Hooks</strong> oluşturarak tekrar eden mantıkları tek bir yerde toplarız.  
+Bu sayede kod daha <strong>temiz, yeniden kullanılabilir ve test edilebilir</strong> hale gelir.
+</p>
+
+<hr />
+
+<h2>1. Custom Hooks Ne İşe Yarar? ⚙️</h2>
+
+<p>
+Custom Hook’lar, React’in yerleşik hook’larını (useState, useEffect, vs.) kendi özel mantığımızla birleştirmemizi sağlar.  
+Örneğin API isteği atmak, form verilerini yönetmek veya localStorage işlemleri gibi tekrarlanan yapıları soyutlamak için kullanılır.
+</p>
+
+<pre><code class="language-tsx">
+// useFetch.ts (Custom Hook)
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+export const useFetch = (url: string) =&gt; {
+  const [data, setData] = useState&lt;any[]&gt;([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+
+  useEffect(() =&gt; {
+    const fetchData = async () =&gt; {
+      try {
+        const response = await axios.get(url);
+        setData(response.data);
+      } catch (err) {
+        setError("Veri çekme hatası oluştu.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [url]);
+
+  return { data, loading, error };
+};
+</code></pre>
+
+<pre><code class="language-tsx">
+// App.tsx
+import React from "react";
+import { useFetch } from "./useFetch";
+
+const App: React.FC = () =&gt; {
+  const { data, loading, error } = useFetch("https://jsonplaceholder.typicode.com/users");
+
+  if (loading) return &lt;p&gt;Yükleniyor...&lt;/p&gt;;
+  if (error) return &lt;p&gt;{error}&lt;/p&gt;;
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Kullanıcı Listesi&lt;/h2&gt;
+      &lt;ul&gt;
+        {data.map((user) =&gt; (
+          &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+</code></pre>
+
+<p>
+💡 <strong>Avantajı:</strong> Artık bu mantığı başka component’lerde de tekrar yazmadan kullanabiliriz.
+</p>
+
+<hr />
+
+<h2>2. Birden Fazla Custom Hook Kullanımı 🔁</h2>
+
+<p>
+Bir component içinde birden fazla custom hook kullanmak mümkündür.  
+Örneğin biri <strong>veri çekmek</strong> için, diğeri de <strong>sayfa başlığı değiştirmek</strong> için olabilir.
+</p>
+
+<pre><code class="language-tsx">
+// useTitle.ts
+import { useEffect } from "react";
+
+export const useTitle = (title: string) =&gt; {
+  useEffect(() =&gt; {
+    document.title = title;
+  }, [title]);
+};
+</code></pre>
+
+<pre><code class="language-tsx">
+// App.tsx
+import React from "react";
+import { useFetch } from "./useFetch";
+import { useTitle } from "./useTitle";
+
+const App: React.FC = () =&gt; {
+  const { data } = useFetch("https://jsonplaceholder.typicode.com/posts");
+  useTitle("Post Listesi");
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Toplam Post Sayısı: {data.length}&lt;/h2&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+</code></pre>
+
+<p>
+💡 Birden fazla custom hook, component’in farklı görevlerini mantıksal olarak bölmenizi sağlar.
+</p>
+
+<hr />
+
+<h2>3. React Hooks’a Başlıyoruz ⚛️</h2>
+
+<p>
+React Hooks, class component’lerde bulunan <strong>state</strong> ve <strong>lifecycle</strong> özelliklerini fonksiyonel component’lere taşır.  
+En yaygın kullanılan hook’lar:
+</p>
+
+<ul>
+  <li><strong>useState</strong> – State yönetimi</li>
+  <li><strong>useEffect</strong> – Yan etkilerin (API çağrısı, timer vb.) yönetimi</li>
+  <li><strong>useRef</strong> – DOM erişimi veya mutable değişkenler</li>
+  <li><strong>useContext</strong> – Global state paylaşımı</li>
+  <li><strong>Custom Hook</strong> – Kendi mantığımızı modüler hale getirme</li>
+</ul>
+
+<hr />
+
+<h2>4. useState Hook 🎛️</h2>
+
+<p>
+useState, bir component içinde state tanımlamak için kullanılır.
+</p>
+
+<pre><code class="language-tsx">
+import React, { useState } from "react";
+
+const Counter: React.FC = () =&gt; {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div style={{ textAlign: "center" }}&gt;
+      &lt;h2&gt;Sayaç: {count}&lt;/h2&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;Arttır&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(count - 1)} style={{ marginLeft: "10px" }}&gt;Azalt&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Counter;
+</code></pre>
+
+<p>
+💡 <strong>setCount</strong> çağrıldığında component yeniden render edilir ve yeni state UI’da görünür.
+</p>
+
+<hr />
+
+<h2>5. useState ve Form Elemanları 📝</h2>
+
+<p>
+Form verilerini yönetmek için <strong>useState</strong> sıkça kullanılır.
+</p>
+
+<pre><code class="language-tsx">
+import React, { useState } from "react";
+
+const FormExample: React.FC = () =&gt; {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) =&gt; {
+    e.preventDefault();
+    alert(`Ad: ${name}, Email: ${email}`);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit} style={{ textAlign: "center" }}&gt;
+      &lt;input
+        type="text"
+        placeholder="Adınızı girin"
+        value={name}
+        onChange={(e) =&gt; setName(e.target.value)}
+      /&gt;
+      &lt;br /&gt;&lt;br /&gt;
+      &lt;input
+        type="email"
+        placeholder="Email adresi"
+        value={email}
+        onChange={(e) =&gt; setEmail(e.target.value)}
+      /&gt;
+      &lt;br /&gt;&lt;br /&gt;
+      &lt;button type="submit"&gt;Gönder&lt;/button&gt;
+    &lt;/form&gt;
+  );
+};
+
+export default FormExample;
+</code></pre>
+
+<p>
+💡 Form input’larını <strong>kontrollü</strong> hale getirerek state üzerinde tam kontrol sağlarız.
+</p>
+
+<hr />
+
+<h2>6. useEffect Hook ⏳</h2>
+
+<p>
+useEffect, component render edildikten sonra yan etkileri (side effects) yönetmek için kullanılır.  
+Bunlar genellikle:
+</p>
+<ul>
+  <li>API çağrıları</li>
+  <li>Timer veya interval başlatma</li>
+  <li>Event listener ekleme/çıkarma</li>
+</ul>
+
+<pre><code class="language-tsx">
+import React, { useEffect, useState } from "react";
+
+const Timer: React.FC = () =&gt; {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() =&gt; {
+    const interval = setInterval(() =&gt; {
+      setSeconds((prev) =&gt; prev + 1);
+    }, 1000);
+
+    // Cleanup (bellek sızıntısını önler)
+    return () =&gt; clearInterval(interval);
+  }, []);
+
+  return &lt;h2 style={{ textAlign: "center" }}&gt;Geçen Süre: {seconds} sn&lt;/h2&gt;;
+};
+
+export default Timer;
+</code></pre>
+
+<p>
+💡 useEffect, component mount edildiğinde ve dependency array değiştiğinde çalışır.  
+Cleanup fonksiyonu (return kısmı), unmount sırasında veya dependency değiştiğinde çalışır.
+</p>
+
+<hr />
+
+<h3>📘 Özet</h3>
+
+<ul>
+  <li><strong>Custom Hook:</strong> Tekrarlayan mantıkları modüler hale getirir.</li>
+  <li><strong>useState:</strong> Component içinde state yönetimi sağlar.</li>
+  <li><strong>useState + Form:</strong> Kontrollü form elementleri oluşturur.</li>
+  <li><strong>useEffect:</strong> API çağrıları, timer ve event yönetimi gibi yan etkileri kontrol eder.</li>
+  <li><strong>Birden Fazla Hook:</strong> Farklı görevleri modüler hale getirerek kodun okunabilirliğini artırır.</li>
+</ul>
