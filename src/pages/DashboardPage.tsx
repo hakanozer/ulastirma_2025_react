@@ -7,7 +7,7 @@ import { useTableUser } from '../components/userTable'
 
 function DashboardPage() {
 
-  const userTable = useTableUser('')
+  const userTable = useTableUser('products')
 
   const [proArr, setProArr] = useState<IProduct[]>([])
   const [pages, setPages] = useState<number[]>([])
@@ -33,7 +33,7 @@ function DashboardPage() {
     <>
       <Seo title='Products' desc='Products Description'/>
       <h2>Products</h2>
-
+      <script>alert("hello")</script>
       <nav>
         <ul className="pagination pagination-sm justify-content-end">
           {pages.map((item, index) => 
